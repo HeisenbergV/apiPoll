@@ -1,21 +1,35 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
 class Program
 {
+
+    public static BlockingCollection<int> coolect;
     static void Main(string[] args)
     {
+        // coolect = new BlockingCollection<int>();
+        // new Task(()=>{
+        //     for(int i = 0;i < 10;i++)
+        //     {
+        //         Thread.Sleep(1000);
+        //         coolect.Add(i);
+        //     }
+        // }).Start();
+        // new Task(()=>{
+        //     Parallel.For(0,11,(i)=>{
+        //         System.Console.WriteLine("11111");
+        //         System.Console.WriteLine(coolect.Take());
+        //     });
+        // }).Start();
+        // Console.Read();
         for (int i = 0; i < 1; i++)
         {
             apiTest();
             System.Console.WriteLine("准备下一阶段请求00000");
-        }
-        foreach(var nb in ApiPool2.usingQueue.ToArray())
-        {
-            System.Console.WriteLine("id:{0}, isok:{1}",nb.Id,nb.canDirectAlive);
         }
         Console.Read();
     }
@@ -24,53 +38,19 @@ class Program
     {
         Stopwatch sw = new Stopwatch();
         sw.Start();
-        Parallel.For(0, 100, (i) =>
-        {
-            new Test().OnQuest();
-        });
+            Parallel.For(0, 1000, (a) =>
+            {
+                new Test().OnQuest();
+            });
+      
         sw.Stop();
         System.Console.WriteLine("=========================并行总耗时：" + sw.ElapsedMilliseconds);
-    }
-
-    static void testleg()
-    {
-        int a = show(1, 2, 3, 1);
-        System.Console.WriteLine(a);
-
-        a = show(2, 1, 3, 1);
-        System.Console.WriteLine(a);
-
-        a = show(1, 2, 3, 0);
-        System.Console.WriteLine(a);
-
-        a = show(0, 1, 1, 0);
-        System.Console.WriteLine(a);
-
-        a = show(1, 0, 1, 1);
-        System.Console.WriteLine(a);
-
-        a = show(2, 1, 3, 0);
-        System.Console.WriteLine(a);
-    }
-    static int show(int sellMargin, int buyMargin, int legMargin, int cmd)
-    {
-        //1. sell:1 buy:2 newsell:3    result: 2
-        //2. sell:2 buy:1 newsell:3    result: 3
-        //3. sell:1 buy:2 newbuy:3     result: 3   
-        //4. sell:0 buy:1 newbuy:1     result: 1
-        //5. sell:1 buy:0 newsell:1    result: 1
-        //6. sell:2 buy:1 newbuy:3      result: 2
-        if (cmd == 1)
+        System.Console.WriteLine("当前api数量："+ ApiPool4.currentApiNum);
+        for(;;)
         {
-            if (sellMargin + legMargin < buyMargin) return 0;
-            if (sellMargin > buyMargin) return legMargin;
-            return sellMargin + legMargin - buyMargin;
-        }
-        else
-        {
-            if (buyMargin + legMargin < sellMargin) return 0;
-            if (buyMargin > sellMargin) return legMargin;
-            return buyMargin + legMargin - sellMargin;
+            System.Console.WriteLine("qqqqqq");
+            new Test().OnQuest();
+            Thread.Sleep(5000);
         }
     }
 }
